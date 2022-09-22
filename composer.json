@@ -19,7 +19,7 @@
         "illuminate/validation": "^9.0",
         "illuminate/database": "^9.0",
         "jenssegers/mongodb": "^3.9",
-        "illuminate/http": "^9.31"
+        "illuminate/http": "^9.0"
     },
     "extra": {
         "laravel": {
