@@ -10,14 +10,16 @@ abstract class BaseService
 {
     protected array $hiddenFields = [];
 
-    /**
-     * @return static
-     * @throws \Exception
-     */
-    protected static function getInstance(): static
-    {
-        throw new \Exception('Undefined method');
-    }
+    abstract static function getInstance(): static;
+
+//    /**
+//     * @return static
+//     * @throws \Exception
+//     */
+//    static function getInstance(): static
+//    {
+//        throw new \Exception('Undefined method');
+//    }
 
     final protected function __construct(protected \Jenssegers\Mongodb\Query\Builder|\Jenssegers\Mongodb\Eloquent\Builder $builder)
     {
