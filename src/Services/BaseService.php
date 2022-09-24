@@ -6,20 +6,15 @@ use Zlt\LaravelApiAuth\Support\ApiRequest;
 use Zlt\LaravelApiAuth\Support\ApiResponse;
 use Zlt\LaravelApiAuth\Support\Status;
 
-abstract class BaseService
+abstract class BaseService implements Serviceable
 {
     protected array $hiddenFields = [];
-
-    abstract static function getInstance(): static;
 
     /**
      * @throws \Exception
      */
-    final protected function __construct(protected \Jenssegers\Mongodb\Query\Builder|\Jenssegers\Mongodb\Eloquent\Builder $builder)
+    public function __construct(protected \Jenssegers\Mongodb\Query\Builder|\Jenssegers\Mongodb\Eloquent\Builder $builder)
     {
-        if (!$this instanceof Serviceable) {
-            throw new \Exception('Please implement Serviceable interface');
-        }
     }
 
     public static function __callStatic($method, $args)
