@@ -75,4 +75,9 @@ class ApiRequest
         $this->validatedValues = $validator->validated();
         return $this;
     }
+
+    public function getValidatedValues(): array
+    {
+        return $this->validatedValues;
+    }
 }
