@@ -25,4 +25,9 @@ return [
      * Validation rule for password in registration
      */
     'password:rule' => 'required|min:8',
+
+    /*
+     * Determine if api routes should have `application/json` as Accept header
+     */
+    'addApplicationJsonHeader' => true,
 ];
