@@ -53,7 +53,8 @@ class Login
 
         $data = $user->toArray();
         if (config('laravel-api-auth.enableSanctum', true)) {
-            $data['token'] = $user->tokens()->first()?->token;
+            $user->tokens()->firstWhere('name', 'auth')?->delete();
+            $data['token'] = $user->createToken('auth')->plainTextToken;
         }
 
         return new ApiResponse('Successfully Login', Status::OK, $data);
