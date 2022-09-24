@@ -2,6 +2,8 @@
 
 namespace Zlt\LaravelApiAuth\Services;
 
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Zlt\LaravelApiAuth\Support\ApiRequest;
 use Zlt\LaravelApiAuth\Support\ApiResponse;
 use Zlt\LaravelApiAuth\Support\Status;
@@ -10,10 +12,7 @@ abstract class BaseService implements Serviceable
 {
     protected array $hiddenFields = [];
 
-    /**
-     * @throws \Exception
-     */
-    public function __construct(protected \Jenssegers\Mongodb\Query\Builder|\Jenssegers\Mongodb\Eloquent\Builder $builder)
+    public function __construct(protected QueryBuilder|EloquentBuilder $builder)
     {
     }
 
