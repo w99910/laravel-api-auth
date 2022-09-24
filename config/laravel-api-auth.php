@@ -30,4 +30,19 @@ return [
      * Determine if api routes should have `application/json` as Accept header
      */
     'addApplicationJsonHeader' => true,
+
+    /*
+     * Only specified columns will be accepted in request.
+     */
+    'request' => [
+        /*
+         * 'column' => request parameter/s. Values accept:
+         * - string: column will be exactly look up with value (e.g 'username' => 'name' )
+         * - array: column will be look up inside value. (i.e, like in_array php function)  (e.g 'address' => ['localAddress','regionalAddress'])
+         * - array with keys: column will be look up between the key and the value. (e.g 'date' => ['startDate' => 'endDate'])
+         * For e.g.,
+         */
+
+        // \Zlt\LaravelApiAuth\Support\QueryableColumn::from('date', ['startDate', 'endDate'], 'date_format:Y-m-d|required_with:startDate|required_with:endDate', \Zlt\LaravelApiAuth\Support\Operator::BETWEEN),
+    ]
 ];

@@ -12,17 +12,14 @@ abstract class BaseService
 
     abstract static function getInstance(): static;
 
-//    /**
-//     * @return static
-//     * @throws \Exception
-//     */
-//    static function getInstance(): static
-//    {
-//        throw new \Exception('Undefined method');
-//    }
-
+    /**
+     * @throws \Exception
+     */
     final protected function __construct(protected \Jenssegers\Mongodb\Query\Builder|\Jenssegers\Mongodb\Eloquent\Builder $builder)
     {
+        if (!$this instanceof Serviceable) {
+            throw new \Exception('Please implement Serviceable interface');
+        }
     }
 
     public static function __callStatic($method, $args)
@@ -39,10 +36,7 @@ abstract class BaseService
     private function query(ApiRequest $request): \Jenssegers\Mongodb\Query\Builder|\Jenssegers\Mongodb\Eloquent\Builder
     {
         $query = $this->builder;
-        if ($request->startDate && $request->endDate) {
-            $query = $query->whereBetween('dateTime', ["$request->startDate 00:00:00", "$request->endDate 23:59:59"]);
-        }
-
+        $query = $request->processQuery($query);
         if ($request->orderBy) {
             $order = $request->isDesc ? 'orderByDesc' : 'orderBy';
             $query = $query->$order($request->orderBy);
