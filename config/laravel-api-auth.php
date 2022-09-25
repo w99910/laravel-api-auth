@@ -34,15 +34,22 @@ return [
     /*
      * Only specified columns will be accepted in request.
      */
-    'request' => [
-        /*
-         * 'column' => request parameter/s. Values accept:
-         * - string: column will be exactly look up with value (e.g 'username' => 'name' )
-         * - array: column will be look up inside value. (i.e, like in_array php function)  (e.g 'address' => ['localAddress','regionalAddress'])
-         * - array with keys: column will be look up between the key and the value. (e.g 'date' => ['startDate' => 'endDate'])
-         * For e.g.,
-         */
+    'queryableColumns' => [
+//        \Zlt\LaravelApiAuth\Support\QueryableColumn::from('dateTime',
+//            ['startDate', 'endDate'],
+//            'date_format:Y-m-d|required_with:startDate|required_with:endDate',
+//            \Zlt\LaravelApiAuth\Enums\Operator::BETWEEN,
+//            function ($value, $parameter) {
+//                $date = new Carbon\Carbon($value);
+//                if ($parameter === 'startDate') {
+//                    return $date->startOfDay()->toDateTimeString();
+//                }
+//                return $date->endOfDay()->toDateTimeString();
+//            }),
+    ],
 
-        // \Zlt\LaravelApiAuth\Support\QueryableColumn::from('date', ['startDate', 'endDate'], 'date_format:Y-m-d|required_with:startDate|required_with:endDate', \Zlt\LaravelApiAuth\Support\Operator::BETWEEN),
+    'cache' => [
+        'enable' => false,
+        'cache-prefix' => null,
     ]
 ];

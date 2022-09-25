@@ -2,7 +2,10 @@
 
 namespace Zlt\LaravelApiAuth\Support;
 
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Validator;
+use Zlt\LaravelApiAuth\Enums\Status;
 
 class ApiRequest
 {
@@ -22,7 +25,7 @@ class ApiRequest
     protected array $validatedValues = [];
 
 
-    public function processQuery(\Jenssegers\Mongodb\Query\Builder|\Jenssegers\Mongodb\Eloquent\Builder $query): \Jenssegers\Mongodb\Query\Builder|\Jenssegers\Mongodb\Eloquent\Builder
+    public function processQuery(QueryBuilder|EloquentBuilder $query): QueryBuilder|EloquentBuilder
     {
         if (empty($this->validatedValues)) {
             $this->validated();
@@ -35,7 +38,7 @@ class ApiRequest
 
     public function __construct(public array $values)
     {
-        $queryableColumns = config('laravel-api-auth.request');
+        $queryableColumns = config('laravel-api-auth.queryableColumns');
         if (!empty($queryableColumns)) {
             $customRules = [];
             foreach ($queryableColumns as $column) {

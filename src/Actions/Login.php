@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Zlt\LaravelApiAuth\Support\ApiResponse;
-use Zlt\LaravelApiAuth\Support\Status;
+use Zlt\LaravelApiAuth\Enums\Status;
 
 class Login
 {

@@ -3,6 +3,7 @@
 namespace Zlt\LaravelApiAuth\Support;
 
 use Throwable;
+use Zlt\LaravelApiAuth\Enums\Status;
 
 class ApiResponseException extends \Exception implements Throwable
 {

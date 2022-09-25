@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Zlt\LaravelApiAuth\Support\ApiRequest;
 use Zlt\LaravelApiAuth\Support\ApiResponse;
-use Zlt\LaravelApiAuth\Support\Status;
+use Zlt\LaravelApiAuth\Enums\Status;
 
 abstract class BaseService implements Serviceable
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zlt\LaravelApiAuth\Support;
+namespace Zlt\LaravelApiAuth\Enums;
 
 enum Status: int
 {

@@ -4,6 +4,7 @@ namespace Zlt\LaravelApiAuth\Support;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Zlt\LaravelApiAuth\Enums\Operator;
 
 class QueryableColumn
 {

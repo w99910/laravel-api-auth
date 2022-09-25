@@ -2,6 +2,8 @@
 
 namespace Zlt\LaravelApiAuth\Support;
 
+use Zlt\LaravelApiAuth\Enums\Status;
+
 class ApiResponse
 {
     public function __construct(public readonly string $message, public readonly Status $status, public readonly array $data = [])
