@@ -2,16 +2,19 @@
 
 namespace Zlt\LaravelApiAuth\Support;
 
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+
 class QueryableColumn
 {
-    public function __construct(public string $column, public $requestParameter, public string $rule, public Operator $operator)
+    public function __construct(public string $column, public $requestParameter, public string $rule, public Operator $operator, public ?\Closure $castRequestValue = null)
     {
     }
 
     /**
      * @throws \Exception
      */
-    public function query(\Jenssegers\Mongodb\Query\Builder|\Jenssegers\Mongodb\Eloquent\Builder $query, array $values)
+    public function query(QueryBuilder|EloquentBuilder $query, array $values): EloquentBuilder|QueryBuilder
     {
         $value = $this->getValue($values);
         if (!$value) {
@@ -39,14 +42,15 @@ class QueryableColumn
             case Operator::LIKE:
             case Operator::GREATER:
             case Operator::LESS:
-                return $values[$this->requestParameter] ?? null;
+                $value = $values[$this->requestParameter] ?? null;
+                return $this->castRequestValue($value, $this->requestParameter);
                 break;
             case Operator::BETWEEN:
                 if (!is_array($this->requestParameter) || !isset($this->requestParameter[0]) || !isset($this->requestParameter[1])) {
                     throw new \Exception('Invalid request parameter');
                 }
-                $value1 = $values[$this->requestParameter[0]] ?? null;
-                $value2 = $values[$this->requestParameter[1]] ?? null;
+                $value1 = $this->castRequestValue($values[$this->requestParameter[0]] ?? null, $this->requestParameter[0]);
+                $value2 = $this->castRequestValue($values[$this->requestParameter[1]] ?? null, $this->requestParameter[1]);
                 if (!$value1 || !$value2) {
                     return null;
                 }
@@ -57,7 +61,7 @@ class QueryableColumn
                     throw new \Exception('Invalid request parameter');
                 };
                 foreach ($this->requestParameter as $requestParameter) {
-                    $value = $values[$requestParameter] ?? false;
+                    $value = $this->castRequestValue($values[$requestParameter] ?? false, $this->requestParameter);
                     if ($value) {
                         $temp[] = $value;
                     }
@@ -67,8 +71,14 @@ class QueryableColumn
         }
     }
 
-    public static function from(string $column, $requestParameter, string $rule, Operator $operator): QueryableColumn
+    public function castRequestValue($value, $parameter = null)
     {
-        return new QueryableColumn($column, $requestParameter, $rule, $operator);
+        $castRequestValue = $this->castRequestValue;
+        return $castRequestValue && $value ? $castRequestValue($value, $parameter) : $value;
+    }
+
+    public static function from(string $column, $requestParameter, string $rule, Operator $operator, \Closure $closure = null): QueryableColumn
+    {
+        return new QueryableColumn($column, $requestParameter, $rule, $operator, $closure);
     }
 }
