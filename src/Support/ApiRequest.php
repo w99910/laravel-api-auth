@@ -21,41 +21,15 @@ class ApiRequest
         'hiddenFields' => 'string',
         'selectedFields' => 'string'
     ];
-    protected array $queryChains = [];
     protected array $validatedValues = [];
-
-
-    public function processQuery(QueryBuilder|EloquentBuilder $query): QueryBuilder|EloquentBuilder
-    {
-        if (empty($this->validatedValues)) {
-            $this->validated();
-        }
-        foreach ($this->queryChains as $queryChain) {
-            $query = $queryChain($query, $this->validatedValues);
-        }
-        return $query;
-    }
 
     public function __construct(public array $values)
     {
-        $queryableColumns = config('laravel-api-auth.queryableColumns');
-        if (!empty($queryableColumns)) {
-            $customRules = [];
-            foreach ($queryableColumns as $column) {
-                if ($column instanceof QueryableColumn) {
-                    $parameters = $column->requestParameter;
-                    $this->queryChains[$column->column] = fn($query, $parameters) => $column->query($query, $parameters);
-                    if (is_array($parameters)) {
-                        foreach ($parameters as $parameter) {
-                            $customRules[$parameter] = $column->rule;
-                        }
-                        continue;
-                    }
-                    $customRules[$parameters] = $column->rule;
-                }
-            }
-            $this->rules = array_merge($this->rules, $customRules);
-        }
+    }
+
+    public function registerRules(array $rules)
+    {
+        $this->rules = array_merge($this->rules, $rules);
     }
 
     public function validated(): ApiResponse|static

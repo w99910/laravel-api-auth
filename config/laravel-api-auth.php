@@ -31,23 +31,6 @@ return [
      */
     'addApplicationJsonHeader' => true,
 
-    /*
-     * Only specified columns will be accepted in request.
-     */
-    'queryableColumns' => [
-//        \Zlt\LaravelApiAuth\Support\QueryableColumn::from('dateTime',
-//            ['startDate', 'endDate'],
-//            'date_format:Y-m-d|required_with:startDate|required_with:endDate',
-//            \Zlt\LaravelApiAuth\Enums\Operator::BETWEEN,
-//            function ($value, $parameter) {
-//                $date = new Carbon\Carbon($value);
-//                if ($parameter === 'startDate') {
-//                    return $date->startOfDay()->toDateTimeString();
-//                }
-//                return $date->endOfDay()->toDateTimeString();
-//            }),
-    ],
-
     'cache' => [
         'enable' => false,
         'cache-prefix' => null,
