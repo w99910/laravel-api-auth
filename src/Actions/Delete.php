@@ -20,7 +20,7 @@ class Delete
         $this->authClass = config('laravel-api-auth.authUser', \App\Models\User::class);
     }
 
-    public function __invoke(array $values): ApiResponse|Model
+    public function __invoke(array $values): ApiResponse|bool
     {
         if (!class_exists($this->authClass)) {
             return new ApiResponse('Auth class not exist', Status::INTERNAL_SERVER_ERROR, []);
