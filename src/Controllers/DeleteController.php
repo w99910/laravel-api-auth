@@ -15,6 +15,6 @@ class DeleteController
         if ($response instanceof ApiResponse) {
             return $response();
         }
-        return (new ApiResponse('Successfully Deleted', Status::OK, $response->toArray()))();
+        return (new ApiResponse('Successfully Deleted', Status::OK, $response))();
     }
 }
