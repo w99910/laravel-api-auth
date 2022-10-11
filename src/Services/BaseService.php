@@ -84,44 +84,52 @@ abstract class BaseService implements Serviceable
     // Execution methods
     protected function get(array $values): ApiResponse
     {
-        $request = (new ApiRequest($values));
-        if (!empty($this->extraRules)) {
-            $request->registerRules($this->extraRules);
-        }
-        $request = $request->validated();
-        if ($request instanceof ApiResponse) {
-            return $request;
-        }
+        try {
+            $request = (new ApiRequest($values));
+            if (!empty($this->extraRules)) {
+                $request->registerRules($this->extraRules);
+            }
+            $request = $request->validated();
+            if ($request instanceof ApiResponse) {
+                return $request;
+            }
 
-        $query = $this->query($request);
-        $data = $query->get();
-        if (!empty($this->hiddenFields)) {
-            $data = $data->map(function ($item) {
-                $temp = [];
-                $item = !is_array($item) ? (method_exists($item, 'toArray') ? $item->toArray() : get_object_vars($item)) : $item;
-                foreach (array_keys($item) as $key) {
-                    if (!in_array($key, $this->hiddenFields)) {
-                        $temp[$key] = $item[$key];
+            $query = $this->query($request);
+            $data = $query->get();
+            if (!empty($this->hiddenFields)) {
+                $data = $data->map(function ($item) {
+                    $temp = [];
+                    $item = !is_array($item) ? (method_exists($item, 'toArray') ? $item->toArray() : get_object_vars($item)) : $item;
+                    foreach (array_keys($item) as $key) {
+                        if (!in_array($key, $this->hiddenFields)) {
+                            $temp[$key] = $item[$key];
+                        }
                     }
-                }
-                return $temp;
-            });
+                    return $temp;
+                });
+            }
+            return new ApiResponse('Success', Status::OK, $data->toArray());
+        } catch (\Exception $e) {
+            return new ApiResponse($e->getMessage(), Status::INTERNAL_SERVER_ERROR);
         }
-        return new ApiResponse('Success', Status::OK, $data->toArray());
     }
 
     protected function count(array $values): ApiResponse
     {
-        $request = (new ApiRequest($values));
-        if (!empty($this->extraRules)) {
-            $request->registerRules($this->extraRules);
+        try {
+            $request = (new ApiRequest($values));
+            if (!empty($this->extraRules)) {
+                $request->registerRules($this->extraRules);
+            }
+            $request = $request->validated();
+            if ($request instanceof ApiResponse) {
+                return $request;
+            }
+            $query = $this->query($request);
+            return new ApiResponse('Success', Status::OK, ['count' => $query->count()]);
+        } catch (\Exception $e) {
+            return new ApiResponse($e->getMessage(), Status::INTERNAL_SERVER_ERROR);
         }
-        $request = $request->validated();
-        if ($request instanceof ApiResponse) {
-            return $request;
-        }
-        $query = $this->query($request);
-        return new ApiResponse('Success', Status::OK, ['count' => $query->count()]);
     }
 
     protected function registerQueryColumn(QueryableColumn $column)

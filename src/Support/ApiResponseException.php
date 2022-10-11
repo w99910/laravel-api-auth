@@ -13,7 +13,6 @@ class ApiResponseException extends \Exception implements Throwable
     {
         // some code
         $this->apiResponse = new ApiResponse($message, $status, $data);
-        // make sure everything is assigned properly
         parent::__construct($message, $status->value, $previous);
     }
 
