@@ -22,33 +22,42 @@ class Delete
 
     public function __invoke(array $values): ApiResponse|bool
     {
-        if (!class_exists($this->authClass)) {
-            return new ApiResponse('Auth class not exist', Status::INTERNAL_SERVER_ERROR, []);
+        try {
+            if (!class_exists($this->authClass)) {
+                return new ApiResponse('Auth class not exist', Status::INTERNAL_SERVER_ERROR, []);
+            }
+
+            if (!(new $this->authClass()) instanceof Model) {
+                return new ApiResponse('Auth class should be instance of Model', Status::INTERNAL_SERVER_ERROR, []);
+            }
+
+            if ($this->username === 'email') {
+                $rules['email'] = 'required|email';
+            } else {
+                $rules[$this->username] = 'required';
+            }
+            $validator = Validator::make($values, $rules);
+
+            if ($validator->fails()) {
+                return new ApiResponse('Validation fails', Status::FORBIDDEN, $validator->errors()->messages());
+            }
+
+            $credentials = $validator->validated();
+
+            $user = $this->authClass::firstWhere($this->username, $credentials[$this->username]);
+
+            if (!$user) {
+                return new ApiResponse('User not found', Status::NOT_FOUND, $credentials);
+            }
+
+            if (config('laravel-api-auth.enableSanctum', true)) {
+                $user->tokens()?->delete();
+            }
+
+            return $user->delete();
+        } catch (\Exception $exception) {
+            return new ApiResponse($exception->getMessage(), Status::INTERNAL_SERVER_ERROR);
         }
 
-        if (!(new $this->authClass()) instanceof Model) {
-            return new ApiResponse('Auth class should be instance of Model', Status::INTERNAL_SERVER_ERROR, []);
-        }
-
-        if ($this->username === 'email') {
-            $rules['email'] = 'required|email';
-        } else {
-            $rules[$this->username] = 'required';
-        }
-        $validator = Validator::make($values, $rules);
-
-        if ($validator->fails()) {
-            return new ApiResponse('Validation fails', Status::FORBIDDEN, $validator->errors()->messages());
-        }
-
-        $credentials = $validator->validated();
-
-        $user = $this->authClass::firstWhere($this->username, $credentials[$this->username]);
-
-        if (config('laravel-api-auth.enableSanctum', true)) {
-            $user->tokens()?->delete();
-        }
-
-        return $user->delete();
     }
 }
