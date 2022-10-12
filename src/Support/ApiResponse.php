@@ -14,9 +14,9 @@ class ApiResponse
     {
         $data = ['message' => $this->message];
         if (is_array($this->data)) {
-            $data = array_merge($data, $this->data);
+            $data = array_merge($data, ['data' => $this->data]);
         } else {
-            $data[] = $this->data;
+            $data['data'] = $this->data;
         }
         return response()->json($data, $this->status->value);
     }
