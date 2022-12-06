@@ -126,7 +126,7 @@ abstract class BaseService implements Serviceable
                 return $request;
             }
             $query = $this->query($request);
-            return new ApiResponse('Success', Status::OK, ['count' => $query->count()]);
+            return new ApiResponse('Success', Status::OK, ['count' => $query->get()->count()]);
         } catch (\Exception $e) {
             return new ApiResponse($e->getMessage(), Status::INTERNAL_SERVER_ERROR);
         }
