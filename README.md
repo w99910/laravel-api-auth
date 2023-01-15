@@ -1,4 +1,4 @@
-# Laravel Basic Api Auth
+# Laravel Api Auth
 
 This package provides basic actions to authenticate a user without the needs of your own implementation.
 
@@ -43,8 +43,8 @@ There are two main action classes:
     $response = $register();
     ```
 
-    - ### Configuration
-      The following are the default configs.
+- ### Configuration
+     The following are the default configs.
     ```php
     return [
       /*
