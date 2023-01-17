@@ -1,6 +1,32 @@
 # Laravel Api Auth
 
-This package provides basic actions to authenticate a user without the needs of your own implementation.
+This package provides basic api authorization and easy-to-use servicing your Models.
+
+- Using this package, you don't need to write your own authorization logic for your api.
+  Even if you don't want to, you can use actions classes to ease your own authorization.
+- You don't have to write your own query.
+  Instead of using `Post::whereBetween(...)->orderByDesc(...)->get()`, you can use like
+  ```php
+    PostService::get([
+      'startDate' => '2022-01-01',
+      'endDate' => '2022-06-01',
+      'orderBy' => 'date',
+      'isDesc' => true,
+    ])
+  ```
+
+## Table Of Contents
+
+- [Installation](#installation)
+- [Publish config file](#publish-config-file)
+- [Authorization](#authorization)
+    - [Manually Login and Register](#manually-login-and-register)
+- [Servicing](#servicing)
+    - [Why you would need this?](#why-you-would-need-this)
+    - [How to use?](#how-to-use-it)
+- [Caching Response](#caching-response)
+- [License](#license)
+- [Conclusion](#conclusion)
 
 ## Installation
 
@@ -14,11 +40,53 @@ $ composer require zlt/laravel-api-auth
 $ php artisan vendor:publish --provider="Zlt\LaravelApiAuth\LaravelApiAuthServiceProvider"
 ```
 
-## Usage
+The following are the default config.
 
-### Authentication
+```php
+<?php
 
-There are already api routes defined for you to authenticate a user such as `/api/login`, `/api/register`
+return [
+    /*
+     * If true, `api/login` and `api/register` routes will be registered.
+     */
+    'shouldIncludeRoutes' => true,
+
+    /*
+     * Define your auth model
+     */
+    'authUser' => App\Models\User::class,
+
+    /*
+     * If true, action will try to create token in registration and appending token in login.
+     */
+    'enableSanctum' => true,
+
+    /*
+     * In some cases, you might want to use other column than `email`
+     */
+    'username' => 'email',
+
+    /*
+     * Validation rule for password in registration
+     */
+    'password:rule' => 'required|min:8',
+
+    /*
+     * Determine if api routes should have `application/json` as Accept header
+     */
+    'addApplicationJsonHeader' => true,
+
+    /**
+     * When using `Zlt\LaravelApiAuth\Utils\CanCache` trait, you can define cache prefix here.
+     */
+    'cache-prefix' => null,
+];
+
+```
+
+## Authorization
+
+There are already api routes defined for you to authorize a user such as `/api/login`, `/api/register`
 and `/api/delete`.
 In order to disable those routes, you can set the `shouldIncludeRoutes` option to `false` in
 the `config/laravel-api-auth.php` file.
@@ -129,6 +197,7 @@ PostService::count([
 - First, you need to extend `Zlt\LaravelApiAuth\Services\BaseService` and implement the `getInstance` method.
   ```php
   class YourService extends Zlt\LaravelApiAuth\Services\BaseService{
+  
     static function getInstance(): static
     {
        
@@ -172,6 +241,7 @@ PostService::count([
   ```php
   // Register queryable column in constructor
   class YourService extends Zlt\LaravelApiAuth\Services\BaseService{
+  
     public function __construct()
     {
         $this->registerQueryColumn(QueryableColumn::from(
@@ -234,48 +304,22 @@ class YourClass {
 }
 ```
 
-## Configuration
+## License
 
-The following are the default configs.
+[MIT](LICENSE)
 
-```php
-  <?php
+## Conclusion
 
-return [
-    /*
-     * If true, `api/login` and `api/register` routes will be registered.
-     */
-    'shouldIncludeRoutes' => true,
+Why I created this package is because I needed to use such features in my projects. But now I think it would probably
+help
+others too. So I decided to share it with you. I hope you find it useful.
 
-    /*
-     * Define your auth model
-     */
-    'authUser' => App\Models\User::class,
+Feel free to contribute to this package.
 
-    /*
-     * If true, action will try to create token in registration and appending token in login.
-     */
-    'enableSanctum' => true,
+If you find it useful, please give it a star or buy me a coffee via Binance.
 
-    /*
-     * In some cases, you might want to use other column than `email`
-     */
-    'username' => 'email',
+<img src="https://zawlintun.me/BinancePayQR.png" alt="binancePayQR" width="200"/>
 
-    /*
-     * Validation rule for password in registration
-     */
-    'password:rule' => 'required|min:8',
+Cheers!
 
-    /*
-     * Determine if api routes should have `application/json` as Accept header
-     */
-    'addApplicationJsonHeader' => true,
 
-    /**
-     * When using `Zlt\LaravelApiAuth\Utils\CanCache` trait, you can define cache prefix here.
-     */
-    'cache-prefix' => null,
-];
-
-```
