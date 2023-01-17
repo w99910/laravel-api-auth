@@ -31,8 +31,8 @@ return [
      */
     'addApplicationJsonHeader' => true,
 
-    'cache' => [
-        'enable' => false,
-        'cache-prefix' => null,
-    ]
+    /**
+     * When using `Zlt\LaravelApiAuth\Utils\CanCache` trait, you can define cache prefix here.
+     */
+    'cache-prefix' => null,
 ];

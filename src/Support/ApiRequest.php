@@ -10,13 +10,18 @@ use Zlt\LaravelApiAuth\Enums\Status;
 class ApiRequest
 {
     public ?string $orderBy = null;
+
     public ?int $limit = null;
+
+    public ?int $offset = null;
     public bool $isDesc = true;
     public ?array $hiddenFields = null;
     public ?array $selectedFields = null;
+
     private array $rules = [
         'orderBy' => 'string',
         'limit' => 'int|min:1',
+        'offset' => 'int|min:0',
         'isDesc' => 'boolean',
         'hiddenFields' => 'string',
         'selectedFields' => 'string'
@@ -27,7 +32,7 @@ class ApiRequest
     {
     }
 
-    public function registerRules(array $rules)
+    public function registerRules(array $rules): void
     {
         $this->rules = array_merge($this->rules, $rules);
     }

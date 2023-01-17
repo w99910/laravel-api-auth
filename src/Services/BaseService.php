@@ -46,16 +46,20 @@ abstract class BaseService implements Serviceable
 
     private function query(ApiRequest $request): EloquentBuilder|QueryBuilder
     {
-        $query = $this->builder;
+        $query = $this->processExtraQueries($this->builder, $request->getValidatedValues());
         if ($request->orderBy) {
             $order = $request->isDesc ? 'orderByDesc' : 'orderBy';
             $query = $query->$order($request->orderBy);
         }
 
-        if ($request->limit) {
-            $limit = $request->limit > 1000 ? 1000 : $request->limit;
-            $query = $query->limit($limit);
+        if ($request->offset) {
+            $query = $query->skip($request->offset);
         }
+
+        if ($request->limit) {
+            $query = $query->limit($request->limit);
+        }
+
         if ($request->hiddenFields) {
             $this->hiddenFields = $request->hiddenFields;
         }
@@ -63,7 +67,7 @@ abstract class BaseService implements Serviceable
         if ($request->selectedFields) {
             $query = $query->select($request->selectedFields);
         }
-        return $this->processExtraQueries($query, $request->getValidatedValues());
+        return $query;
     }
 
     private function processExtraQueries(QueryBuilder|EloquentBuilder $query, array $validatedValues): EloquentBuilder|QueryBuilder

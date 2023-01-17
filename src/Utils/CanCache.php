@@ -1,5 +1,8 @@
 <?php
 
+namespace Zlt\LaravelApiAuth\Utils;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 trait CanCache
@@ -28,7 +31,7 @@ trait CanCache
 
     public function cacheKey(Request $request): string
     {
-        return config('laravel-api-auth.cache.cache-prefix') . md5($request->fullUrlWithQuery(method_exists($request, 'safe') ? $request->safe()->toArray() : $request->all()));
+        return config('laravel-api-auth.cache-prefix') . md5($request->fullUrlWithQuery(method_exists($request, 'safe') ? $request->safe()->toArray() : $request->all()));
     }
 
     public function checkIfCacheKeyExists(Request $request): bool
