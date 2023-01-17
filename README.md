@@ -7,12 +7,12 @@ This package provides basic api authorization and easy-to-use servicing your Mod
 - You don't have to write your own query.
   Instead of using `Post::whereBetween(...)->orderByDesc(...)->get()`, you can use like
   ```php
-    PostService::get([
-      'startDate' => '2022-01-01',
-      'endDate' => '2022-06-01',
-      'orderBy' => 'date',
-      'isDesc' => true,
-    ])
+  PostService::get([
+    'startDate' => '2022-01-01',
+    'endDate' => '2022-06-01',
+    'orderBy' => 'date',
+    'isDesc' => true,
+  ])
   ```
 
 ## Table Of Contents
